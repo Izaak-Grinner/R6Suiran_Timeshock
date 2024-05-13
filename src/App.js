@@ -7,7 +7,7 @@ import './App.css';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/R6Suiran_Timeshock">
       <Routes>
         <Route path={`/`} element={<Home />} />
         <Route path={`/Quiz`} element={<Quiz />} />
