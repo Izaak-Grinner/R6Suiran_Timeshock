@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  merge-request:
+    branches:
+      - master
 
 jobs:
   build:
