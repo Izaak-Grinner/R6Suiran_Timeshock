@@ -1,28 +1,23 @@
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import Setting from './Setting';
+import Timeshock from './TimeShock';
 
-const Home = () => {
-    const navigate = useNavigate();
-    const changePage = (index) => {
-        var path = "/" + index;
-        navigate(path);
+const Quiz = () => {
+    const [settings, setSettings] = useState(null);
+
+    const handleStart = (settings) => {
+        setSettings(settings);
     };
 
-
     return (
-        <div className="Page">
-            <center>
-                <button onClick={() => changePage("")}>homeへ</button>
-                <p></p>
-                <div class="quizSetting">
-                    クイズの難易度
-                    <input id="quizLevel"></input>
-                    <button onClick={() => changePage("TimeShock")}>クイズを始める</button>
-
-                </div>
-            </center>
-
+        <div>
+            {!settings ? (
+                <Setting onStart={handleStart} />
+            ) : (
+                <Timeshock settings={settings} />
+            )}
         </div>
     );
 };
 
-export default Home;
+export default Quiz;

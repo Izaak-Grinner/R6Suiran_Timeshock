@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-
 const Home = () => {
     const navigate = useNavigate();
     const changePage = (index) => {
@@ -11,7 +10,7 @@ const Home = () => {
     return (
         <div className="Page">
             <center>
-                <div class="pages-button">
+                <div class="button">
                     <button onClick={() => changePage("Quiz")}>問題</button>
                     <p></p>
                 </div>
