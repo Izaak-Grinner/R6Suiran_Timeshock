@@ -40,6 +40,7 @@ const Timeshock = ({ settings }) => {
 
     // ユーザーが回答を選択したときに呼び出される関数
     const handleAnswer = () => {
+
         setScore((prev) => prev + 1);
 
         loadNextQuestion();
