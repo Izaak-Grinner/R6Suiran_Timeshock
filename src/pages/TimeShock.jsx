@@ -40,9 +40,8 @@ const Timeshock = ({ settings }) => {
 
     // ユーザーが回答を選択したときに呼び出される関数
     const handleAnswer = () => {
-        if (questions[currentQuestionIndex].answer === 'true') {
-            setScore((prev) => prev + 1);
-        }
+        setScore((prev) => prev + 1);
+
         loadNextQuestion();
     };
 
