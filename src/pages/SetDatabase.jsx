@@ -1,5 +1,5 @@
 //import React, { useRef, useEffect } from 'react';
-import Webcam from 'react-webcam';
+//import Webcam from 'react-webcam';
 
 const VideoOverlay = () => {
 
