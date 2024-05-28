@@ -7,7 +7,7 @@ const VideoOverlay = () => {
     return (
         <div>
             <video width='100%' controls>
-                <source src='src\timeShockTimer.mp4' type='video/mp4' />
+                <source src='../timeShockTimer.mp4' type='video/mp4' />
                 Your browser does not support the video tag.
             </video>
         </div>
