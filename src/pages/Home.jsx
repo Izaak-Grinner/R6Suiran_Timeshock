@@ -13,6 +13,8 @@ const Home = () => {
                 <div class="button">
                     <button onClick={() => changePage("Quiz")}>問題</button>
                     <p></p>
+                    <button onClick={() => changePage("SetDatabase")}>DBの設定</button>
+                    <p></p>
                 </div>
             </center>
 
