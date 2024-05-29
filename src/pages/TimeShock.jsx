@@ -68,8 +68,7 @@ const Timeshock = ({ settings }) => {
         <div>
             <h2>Question: {currentQuestion.question}</h2>
             <button onClick={handleAnswer}>True</button>
-            <div>Score: {score}</div>
-            <div>Time Left: {timeLeft}</div>
+            <div>スコア{score}</div>
         </div>
     );
 };
