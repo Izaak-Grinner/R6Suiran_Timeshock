@@ -11,7 +11,7 @@ const VideoOverlay = () => {
 
     const quiz = "ASMR Yshirt ?";
     const score = "11";
-    const answer = "yasuharaaaaaaaaaaaaaaaaaaaaaaaaa";
+    const answer = "あいうえおかきくけこさしすせそ";
     const user = 'yasu';
 
     const styleShow = {
@@ -30,16 +30,16 @@ const VideoOverlay = () => {
 
     const webcamContainer = {
         position: 'absolute',
-        top: '29%',
+        top: '40%',
         left: '50%',
         transform: 'translate(-50%, -50%)', // 中央に配置するためのトランスフォーム
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        width: '920px', // 必要に応じて調整
-        height: '485px', // 必要に応じて調整
+        width: '59%', // 必要に応じて調整
+        height: '54%', // 必要に応じて調整
         overflow: 'hidden',
-        borderRadius: '41%', // 丸い枠を作成
+        borderRadius: '42%', // 丸い枠を作成
         zIndex: 2,
     };
 
@@ -51,42 +51,43 @@ const VideoOverlay = () => {
 
     const textStyle = {
         position: 'absolute',
-        color: 'white',
+        color: 'black',
         zIndex: 4,
 
     };
 
     const styleQuiz = {
         ...textStyle,
-        fontSize: '5em',
-        bottom: '33%',
-        right: '30%'
+        fontSize: '7em',
+        bottom: '8%',
+        right: '35%'
     };
 
     const styleScore = {
         ...textStyle,
-        fontSize: '5em',
-        top: '35%',
-        right: '28%'
+        fontSize: '10em',
+        bottom: '41%',
+        right: '26%'
 
 
     };
 
     const styleAnswer = {
         ...textStyle,
-        fontSize: '3em',
-        top: '20%',
-        right: '25%'
+        fontSize: '4em',
+        top: '25%',
+        right: '22.5%',
+        width: '15%',
+        overflowWrap: 'break-word',
+        lineHeight: '1.2em'
 
     };
 
     const styleUser = {
         ...textStyle,
-        fontSize: '3em',
-        top: '41%',
-        left: '50%',
-        color: 'black'
-
+        fontSize: '7em',
+        bottom: '35%',
+        right: '45%',
     };
 
     useEffect(() => {

@@ -73,4 +73,4 @@ const Timeshock = ({ settings }) => {
     );
 };
 
-export default Timeshock;
+export default Timeshock; 
