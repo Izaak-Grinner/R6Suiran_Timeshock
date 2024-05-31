@@ -8,12 +8,11 @@ const Timeshock = ({ settings }) => {
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [score, setScore] = useState(0);
-    const [timeLeft, setTimeLeft] = useState(5);
     const [isQuizOver, setIsQuizOver] = useState(false);
-    const [showImage, setShowImage] = useState(false);
     const [showText, setShowText] = useState(false);
+    const [isAnswerVisible, setIsAnswerVisible] = useState(false);
+    const [username, setUsername] = useState('');
     const videoRef = useRef(null);
-    const DISPLAY_DELAY = 3500;
 
     useEffect(() => {
         const filteredQuestions = quizData.filter(
@@ -22,50 +21,45 @@ const Timeshock = ({ settings }) => {
         setQuestions(filteredQuestions);
     }, [settings]);
 
-    const loadNextQuestion = useCallback(() => {
-        if (currentQuestionIndex < questions.length - 1) {
-            setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-            setTimeLeft(5);
-        } else {
-            setIsQuizOver(true);
-        }
-    }, [currentQuestionIndex, questions.length]);
-
     useEffect(() => {
-        if (timeLeft <= 0) {
-            loadNextQuestion();
-        } else {
-            const timerId = setInterval(() => {
-                setTimeLeft((prev) => prev - 1);
-            }, 1000);
-            return () => clearInterval(timerId);
-        }
-    }, [timeLeft, loadNextQuestion]);
+        setUsername(settings.username);
+    }, [settings.username]);
 
-    /*const handleAnswer = () => {
-        setScore((prev) => prev + 1);
+    const startQuestionCycle = useCallback(() => {
+        let questionCount = 0;
+
+        const loadNextQuestion = () => {
+            if (questionCount < 12) {
+                questionCount++;
+                setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+                setIsAnswerVisible(false);
+                setShowText(false);
+
+                setTimeout(() => {
+                    setShowText(true);
+                    setTimeout(() => {
+                        setIsAnswerVisible(true);
+                        setTimeout(loadNextQuestion, 250);
+                    }, 4500);
+                }, 250);
+            } else {
+                setIsQuizOver(true);
+            }
+        };
+
         loadNextQuestion();
-    };*/
+    }, []);
 
     useEffect(() => {
         const videoElement = videoRef.current;
         if (videoElement) {
             const handlePlay = () => {
-                setTimeout(() => {
-                    setShowImage(true);
-                    setTimeout(() => {
-                        setShowText(true);
-                    }, 500);
-                }, DISPLAY_DELAY);
-            };
-
-            videoElement.addEventListener('play', handlePlay);
-
-            return () => {
+                setTimeout(startQuestionCycle, 3020);
                 videoElement.removeEventListener('play', handlePlay);
             };
+            videoElement.addEventListener('play', handlePlay);
         }
-    }, []);
+    }, [startQuestionCycle]);
 
     const currentQuestion = questions[currentQuestionIndex];
 
@@ -151,23 +145,30 @@ const Timeshock = ({ settings }) => {
                 <Webcam style={webcamStyle} />
             </div>
 
-            {questions.length === 0 || !currentQuestion ? (
-                <div>Loading...</div>
-            ) : isQuizOver ? (
+            <img src={timeShockText} alt="failure" style={{ ...stylePosition, zIndex: 3 }} />
+
+            {isQuizOver ? (
                 <div>
                     <h2>Quiz Over!</h2>
                     <p>Your final score is: {score}</p>
                 </div>
             ) : (
                 <>
-                    {showImage && <img src={timeShockText} alt="failure" style={{ ...stylePosition, zIndex: 3 }} />}
-
-                    {showText && (
+                    {questions.length === 0 || !currentQuestion ? (
+                        <div>Loading...</div>
+                    ) : (
                         <>
-                            <div style={styleQuiz}>{currentQuestion.question}</div>
-                            <div style={styleScore}>{score}</div>
-                            <div style={styleAnswer}>{currentQuestion.answer}</div>
-                            <div style={styleUser}>{settings.username}</div>
+                            {showText && (
+                                <>
+                                    <div style={styleQuiz}>{currentQuestion.question}</div>
+                                    <div style={styleScore}>{score}</div>
+                                    <div style={styleUser}>{username}</div>
+                                </>
+                            )}
+
+                            {isAnswerVisible && (
+                                <div style={styleAnswer}>{currentQuestion.answer}</div>
+                            )}
                         </>
                     )}
                 </>
