@@ -143,8 +143,8 @@ const Timeshock = ({ settings }) => {
                     setShowText(true);
                     setShowAudio(true);
 
-                    setTimeout(loadNextQuestion, 4950);
-                }, 50);
+                    setTimeout(loadNextQuestion, 4990);
+                }, 10);
             } else {
                 setIsQuizOver(true);
                 console.log("Quiz Over");
