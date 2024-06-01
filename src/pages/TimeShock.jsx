@@ -2,11 +2,23 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Webcam from 'react-webcam';
 import timeShockText from "../images/timeShockText.png";
 import timeShockTimer from "../videos/timeShockTimer.mp4";
+import easy0 from "../audio/easy0.mp3"; // 音声ファイルをインポート
+import easy1 from "../audio/easy1.mp3";
+import easy2 from "../audio/easy2.mp3";
+import easy3 from "../audio/easy3.mp3";
+import normal0 from "../audio/normal0.mp3";
+import normal1 from "../audio/normal1.mp3";
+import normal2 from "../audio/normal2.mp3";
+import normal3 from "../audio/normal3.mp3";
+import hard0 from "../audio/hard0.mp3";
+import hard1 from "../audio/hard1.mp3";
+import hard2 from "../audio/hard2.mp3";
+import hard3 from "../audio/hard3.mp3";
+
 import { Client, Storage } from "appwrite";
 import Papa from 'papaparse';
 import { dbID } from '../appwrite';
 import { useKey } from 'react-use';
-
 
 const Timeshock = ({ settings }) => {
     const [questions, setQuestions] = useState([]);
@@ -14,11 +26,25 @@ const Timeshock = ({ settings }) => {
     const [score, setScore] = useState(0);
     const [isQuizOver, setIsQuizOver] = useState(false);
     const [showText, setShowText] = useState(false);
+    const [showAudio, setShowAudio] = useState(false);
     //const [isAnswerVisible, setIsAnswerVisible] = useState(false);
     const [username, setUsername] = useState('');
     const [files, setFiles] = useState([]);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const videoRef = useRef(null);
+    const refEasy0 = useRef(new Audio(easy0)); // 音声用のrefを作成
+    const refEasy1 = useRef(new Audio(easy1));
+    const refEasy2 = useRef(new Audio(easy2));
+    const refEasy3 = useRef(new Audio(easy3)); // 音声用のrefを作成
+    const refNormal0 = useRef(new Audio(normal0));
+    const refNormal1 = useRef(new Audio(normal1));
+    const refNormal2 = useRef(new Audio(normal2)); // 音声用のrefを作成
+    const refNormal3 = useRef(new Audio(normal3));
+    const refHard0 = useRef(new Audio(hard0));
+    const refHard1 = useRef(new Audio(hard1)); // 音声用のrefを作成
+    const refHard2 = useRef(new Audio(hard2));
+    const refHard3 = useRef(new Audio(hard3));
+
 
     const decrement = () => {
         setScore((prevIndex) => prevIndex - 1);
@@ -112,6 +138,8 @@ const Timeshock = ({ settings }) => {
 
                 setTimeout(() => {
                     setShowText(true);
+                    setShowAudio(true);
+
                     setTimeout(() => {
                         // setIsAnswerVisible(true);
                         setTimeout(loadNextQuestion, 250);
@@ -139,7 +167,46 @@ const Timeshock = ({ settings }) => {
 
 
 
+    // showTextがtrueになるたびに音声を再生する
+    useEffect(() => {
+        if (showAudio) {
+            setTimeout(() => {
+                if (settings.level === 'easy') {
+                    if (settings.type === "0") {
+                        refEasy0.current.play();
+                    } else if (settings.type === "1") {
+                        refEasy1.current.play();
+                    } else if (settings.type === "2") {
+                        refEasy2.current.play();
+                    } else if (settings.type === "3") {
+                        refEasy3.current.play();
+                    }
+                } else if (settings.level === 'normal') {
+                    if (settings.type === "0") {
+                        refNormal0.current.play();
+                    } else if (settings.type === "1") {
+                        refNormal1.current.play();
+                    } else if (settings.type === "2") {
+                        refNormal2.current.play();
+                    } else if (settings.type === "3") {
+                        refNormal3.current.play();
+                    }
 
+                } else if (settings.level === 'hard') {
+                    if (settings.type === "0") {
+                        refHard0.current.play();
+                    } else if (settings.type === "1") {
+                        refHard1.current.play();
+                    } else if (settings.type === "2") {
+                        refHard2.current.play();
+                    } else if (settings.type === "3") {
+                        refHard3.current.play();
+                    }
+
+                }
+            }, 1500);
+        }
+    }, [showAudio, settings.level, settings.type]);
 
     const currentQuestion = questions[currentQuestionIndex];
     console.log("Current Question Index:", currentQuestionIndex);
