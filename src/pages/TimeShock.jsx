@@ -191,7 +191,7 @@ const Timeshock = ({ settings }) => {
         fontSize: '5em',
         textAlign: 'left',
         bottom: '4%',
-        left: '16%'
+        left: '14%'
     };
 
     /*const styleScore = {
