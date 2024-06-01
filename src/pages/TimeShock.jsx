@@ -7,18 +7,6 @@ import Papa from 'papaparse';
 import { dbID } from '../appwrite';
 import { useKey } from 'react-use';
 
-import easy0 from "../music/easy0.mp3";
-import easy1 from "../music/easy1.mp3";
-import easy2 from "../music/easy2.mp3";
-import easy3 from "../music/easy3.mp3";
-import normal0 from "../music/normal0.mp3";
-import normal1 from "../music/normal1.mp3";
-import normal2 from "../music/normal2.mp3";
-import normal3 from "../music/normal3.mp3";
-import hard0 from "../music/hard0.mp3";
-import hard1 from "../music/hard1.mp3";
-import hard2 from "../music/hard2.mp3";
-import hard3 from "../music/hard3.mp3";
 
 const Timeshock = ({ settings }) => {
     const [questions, setQuestions] = useState([]);
@@ -31,7 +19,6 @@ const Timeshock = ({ settings }) => {
     const [files, setFiles] = useState([]);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const videoRef = useRef(null);
-    const audioRef = useRef(new Audio());
 
     const decrement = () => {
         setScore((prevIndex) => prevIndex - 1);
@@ -150,46 +137,8 @@ const Timeshock = ({ settings }) => {
         }
     }, [startQuestionCycle, isDataLoaded]);
 
-    useEffect(() => {
-        if (showText) {
-            // 設定に基づいて音声を選択
-            let sound;
-            if (settings.level === 'easy') {
-                if (settings.type === '0') {
-                    sound = easy0; // 特定のeasy音声を選択するロジックに置き換えてください
-                } else if (settings.type === '1') {
-                    sound = easy1; // 特定のnormal音声を選択するロジックに置き換えてください
-                } else if (settings.type === '2') {
-                    sound = easy2; // 特定のhard音声を選択するロジックに置き換えてください
-                } else if (settings.type === '3') {
-                    sound = easy3; // 特定のhard音声を選択するロジックに置き換えてください
-                }
-            } else if (settings.level === 'normal') {
-                if (settings.type === '0') {
-                    sound = normal0; // 特定のeasy音声を選択するロジックに置き換えてください
-                } else if (settings.type === '1') {
-                    sound = normal1; // 特定のnormal音声を選択するロジックに置き換えてください
-                } else if (settings.type === '2') {
-                    sound = normal2; // 特定のhard音声を選択するロジックに置き換えてください
-                } else if (settings.type === '3') {
-                    sound = normal3; // 特定のhard音声を選択するロジックに置き換えてください
-                }
-            } else if (settings.level === 'hard') {
-                if (settings.type === '0') {
-                    sound = hard0; // 特定のeasy音声を選択するロジックに置き換えてください
-                } else if (settings.type === '1') {
-                    sound = hard1; // 特定のnormal音声を選択するロジックに置き換えてください
-                } else if (settings.type === '2') {
-                    sound = hard2; // 特定のhard音声を選択するロジックに置き換えてください
-                } else if (settings.type === '3') {
-                    sound = hard3; // 特定のhard音声を選択するロジックに置き換えてください
-                }
-            }
 
-            audioRef.current.src = sound;
-            audioRef.current.play();
-        }
-    }, [showText, settings.level, settings.type]);  // settings.type を依存関係に追加
+
 
 
     const currentQuestion = questions[currentQuestionIndex];
