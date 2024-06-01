@@ -7,13 +7,28 @@ import Papa from 'papaparse';
 import { dbID } from '../appwrite';
 import { useKey } from 'react-use';
 
+/*
+import easy0 from "../music/easy0.wav";
+import easy1 from "../music/easy1.wav";
+import easy2 from "../music/easy2.wav";
+import easy3 from "../music/easy3.wav";
+import normal0 from "../music/normal0.wav";
+import normal1 from "../music/normal1.wav";
+import normal2 from "../music/normal2.wav";
+import normal3 from "../music/normal3.wav";
+//import hard0 from "../music/hard0.wav";
+import hard1 from "../music/hard1.wav";
+import hard2 from "../music/hard2.wav";
+import hard3 from "../music/hard3.wav";*/
+
+
 const Timeshock = ({ settings }) => {
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [score, setScore] = useState(0);
     const [isQuizOver, setIsQuizOver] = useState(false);
     const [showText, setShowText] = useState(false);
-    const [isAnswerVisible, setIsAnswerVisible] = useState(false);
+    //const [isAnswerVisible, setIsAnswerVisible] = useState(false);
     const [username, setUsername] = useState('');
     const [files, setFiles] = useState([]);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -107,13 +122,13 @@ const Timeshock = ({ settings }) => {
 
                 setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
                 questionCount++;
-                setIsAnswerVisible(false);
+                //setIsAnswerVisible(false);
                 setShowText(false);
 
                 setTimeout(() => {
                     setShowText(true);
                     setTimeout(() => {
-                        setIsAnswerVisible(true);
+                        // setIsAnswerVisible(true);
                         setTimeout(loadNextQuestion, 250);
                     }, 4500);
                 }, 250);
@@ -189,18 +204,18 @@ const Timeshock = ({ settings }) => {
         left: '16%'
     };
 
-    const styleScore = {
+    /*const styleScore = {
         ...textStyle,
         fontSize: '10em',
         bottom: '41%',
         right: '26%'
-    };
+    };*/
 
     const styleLastScore = {
         zIndex: 5
     };
 
-    const styleAnswer = {
+    /*const styleAnswer = {
         ...textStyle,
         fontSize: '4em',
         top: '26%',
@@ -208,7 +223,7 @@ const Timeshock = ({ settings }) => {
         width: '15%',
         overflowWrap: 'break-word',
         lineHeight: '1.2em'
-    };
+    };*/
 
     const styleUser = {
         ...textStyle,
@@ -245,14 +260,17 @@ const Timeshock = ({ settings }) => {
                             {showText && (
                                 <>
                                     <div style={styleQuiz}>{currentQuestion[2]}</div>
-                                    <div id="score" style={styleScore}>{score}</div>
+                                    {/*<div id="score" style={styleScore}>{score}</div>*/}
                                     <div style={styleUser}>{username}</div>
                                 </>
                             )}
 
+                            {/*
+
                             {isAnswerVisible && (
                                 <div style={styleAnswer}>{currentQuestion[3]}</div>
                             )}
+                        */}
                         </>
                     )}
                 </>

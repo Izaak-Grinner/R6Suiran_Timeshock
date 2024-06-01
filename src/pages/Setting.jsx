@@ -79,12 +79,12 @@ const Setting = ({ onStart }) => {
                     <label style={labelStyle}>
                         <input
                             type="radio"
-                            value="medium"
-                            checked={level === 'medium'}
+                            value="normal"
+                            checked={level === 'normal'}
                             onChange={(e) => setLevel(e.target.value)}
                             style={radioStyle}
                         />
-                        Medium
+                        normal
                     </label>
                     <label style={labelStyle}>
                         <input
