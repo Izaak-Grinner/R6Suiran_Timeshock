@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import Webcam from 'react-webcam';
 import timeShockText from "../images/timeShockText.png";
 import timeShockTimer from "../videos/timeShockTimer.mp4";
-import easy0 from "../audio/easy0.mp3"; // 音声ファイルをインポート
+import easy0 from "../audio/easy0.mp3";
 import easy1 from "../audio/easy1.mp3";
 import easy2 from "../audio/easy2.mp3";
 import easy3 from "../audio/easy3.mp3";
@@ -27,35 +27,13 @@ const Timeshock = ({ settings }) => {
     const [isQuizOver, setIsQuizOver] = useState(false);
     const [showText, setShowText] = useState(false);
     const [showAudio, setShowAudio] = useState(false);
-    //const [isAnswerVisible, setIsAnswerVisible] = useState(false);
     const [username, setUsername] = useState('');
     const [files, setFiles] = useState([]);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const videoRef = useRef(null);
-    const refEasy0 = useRef(new Audio(easy0)); // 音声用のrefを作成
-    const refEasy1 = useRef(new Audio(easy1));
-    const refEasy2 = useRef(new Audio(easy2));
-    const refEasy3 = useRef(new Audio(easy3)); // 音声用のrefを作成
-    const refNormal0 = useRef(new Audio(normal0));
-    const refNormal1 = useRef(new Audio(normal1));
-    const refNormal2 = useRef(new Audio(normal2)); // 音声用のrefを作成
-    const refNormal3 = useRef(new Audio(normal3));
-    const refHard0 = useRef(new Audio(hard0));
-    const refHard1 = useRef(new Audio(hard1)); // 音声用のrefを作成
-    const refHard2 = useRef(new Audio(hard2));
-    const refHard3 = useRef(new Audio(hard3));
 
-
-    const decrement = () => {
-        setScore((prevIndex) => prevIndex - 1);
-    };
-
-    const increment = () => {
-        setScore((prevIndex) => prevIndex + 1);
-    };
-
-    useKey('ArrowDown', decrement);
-    useKey('ArrowUp', increment);
+    useKey('ArrowDown', () => setScore((prevScore) => prevScore - 1));
+    useKey('ArrowUp', () => setScore((prevScore) => prevScore + 1));
 
     useEffect(() => {
         const fetchFiles = async () => {
@@ -120,11 +98,38 @@ const Timeshock = ({ settings }) => {
         };
 
         fetchLatestCSVData();
-    }, [files, settings.level, settings.type]);  // Add dependencies here
+    }, [files, settings.level, settings.type]);
 
     useEffect(() => {
         setUsername(settings.username);
     }, [settings.username]);
+
+    const easyRefs = useMemo(() => [
+        new Audio(easy0),
+        new Audio(easy1),
+        new Audio(easy2),
+        new Audio(easy3),
+    ], []);
+
+    const normalRefs = useMemo(() => [
+        new Audio(normal0),
+        new Audio(normal1),
+        new Audio(normal2),
+        new Audio(normal3),
+    ], []);
+
+    const hardRefs = useMemo(() => [
+        new Audio(hard0),
+        new Audio(hard1),
+        new Audio(hard2),
+        new Audio(hard3),
+    ], []);
+
+    const audioRefs = useMemo(() => ({
+        easy: easyRefs,
+        normal: normalRefs,
+        hard: hardRefs,
+    }), [easyRefs, normalRefs, hardRefs]);
 
     const startQuestionCycle = useCallback(() => {
         let questionCount = 0;
@@ -133,16 +138,12 @@ const Timeshock = ({ settings }) => {
             if (questionCount < 13 && questionCount < questions.length) {
                 setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
                 questionCount++;
-                //setIsAnswerVisible(false);
-                //setShowText(false);
 
                 setTimeout(() => {
                     setShowText(true);
                     setShowAudio(true);
 
-                    setTimeout(loadNextQuestion
-                        // setIsAnswerVisible(true);loadNextQuestion, 250);
-                        , 4950);
+                    setTimeout(loadNextQuestion, 4950);
                 }, 50);
             } else {
                 setIsQuizOver(true);
@@ -157,55 +158,39 @@ const Timeshock = ({ settings }) => {
         const videoElement = videoRef.current;
         if (videoElement && isDataLoaded) {
             const handlePlay = () => {
-                setTimeout(startQuestionCycle, 5600);
+                setTimeout(startQuestionCycle, 3600);
                 videoElement.removeEventListener('play', handlePlay);
             };
             videoElement.addEventListener('play', handlePlay);
         }
     }, [startQuestionCycle, isDataLoaded]);
 
-
-
-    // showTextがtrueになるたびに音声を再生する
-    useEffect(() => {
+    const playAudio = useCallback(() => {
         if (showAudio) {
             setTimeout(() => {
-                if (settings.level === 'easy') {
-                    if (settings.type === "0") {
-                        refEasy0.current.play();
-                    } else if (settings.type === "1") {
-                        refEasy1.current.play();
-                    } else if (settings.type === "2") {
-                        refEasy2.current.play();
-                    } else if (settings.type === "3") {
-                        refEasy3.current.play();
-                    }
-                } else if (settings.level === 'normal') {
-                    if (settings.type === "0") {
-                        refNormal0.current.play();
-                    } else if (settings.type === "1") {
-                        refNormal1.current.play();
-                    } else if (settings.type === "2") {
-                        refNormal2.current.play();
-                    } else if (settings.type === "3") {
-                        refNormal3.current.play();
-                    }
+                try {
+                    const levelRefs = audioRefs[settings.level];
+                    const typeIndex = parseInt(settings.type, 10);
+                    const audioRef = levelRefs[typeIndex];
 
-                } else if (settings.level === 'hard') {
-                    if (settings.type === "0") {
-                        refHard0.current.play();
-                    } else if (settings.type === "1") {
-                        refHard1.current.play();
-                    } else if (settings.type === "2") {
-                        refHard2.current.play();
-                    } else if (settings.type === "3") {
-                        refHard3.current.play();
-                    }
-
+                    audioRef.play().catch(error => {
+                        console.error("Audio playback failed: ", error);
+                        if (audioRef.context && audioRef.context.state === 'suspended') {
+                            audioRef.context.resume().then(() => {
+                                audioRef.play();
+                            });
+                        }
+                    });
+                } catch (error) {
+                    console.error("Error in playing audio:", error);
                 }
-            }, 1500);
+            }, 10);
         }
-    }, [showAudio, settings.level, settings.type]);
+    }, [showAudio, audioRefs, settings.level, settings.type]);
+
+    useEffect(() => {
+        playAudio();
+    }, [showAudio, playAudio]);
 
     const currentQuestion = questions[currentQuestionIndex];
     console.log("Current Question Index:", currentQuestionIndex);
@@ -214,7 +199,6 @@ const Timeshock = ({ settings }) => {
     const styleShow = {
         position: 'relative',
         width: '100%',
-        //height: '100vh',
         aspectRatio: 16 / 9
     };
 
@@ -260,26 +244,9 @@ const Timeshock = ({ settings }) => {
         left: '13%'
     };
 
-    /*const styleScore = {
-        ...textStyle,
-        fontSize: '10em',
-        bottom: '41%',
-        right: '26%'
-    };*/
-
     const styleLastScore = {
         zIndex: 5
     };
-
-    /*const styleAnswer = {
-        ...textStyle,
-        fontSize: '4em',
-        top: '26%',
-        right: '22%',
-        width: '15%',
-        overflowWrap: 'break-word',
-        lineHeight: '1.2em'
-    };*/
 
     const styleUser = {
         ...textStyle,
@@ -316,32 +283,15 @@ const Timeshock = ({ settings }) => {
                             {showText && (
                                 <>
                                     <div style={styleQuiz}>{currentQuestion[2]}</div>
-                                    {/*<div id="score" style={styleScore}>{score}</div>*/}
                                     <div style={styleUser}>{username}</div>
                                 </>
                             )}
-
-                            {/*
-
-                            {isAnswerVisible && (
-                                <div style={styleAnswer}>{currentQuestion[3]}</div>
-                            )}
-                        */}
                         </>
                     )}
                 </>
             )}
-
-            {/*<div>
-                <h3>Fetched Files:</h3>
-                <ul>
-                    {files.map(file => (
-                        <li key={file.$id}>{file.name}</li>
-                    ))}
-                </ul>
-                </div>*/}
         </div>
     );
 };
 
-export default Timeshock;
+export default Timeshock
