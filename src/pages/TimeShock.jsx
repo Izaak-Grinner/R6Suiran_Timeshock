@@ -188,7 +188,7 @@ const Timeshock = ({ settings }) => {
 
     const styleQuiz = {
         ...textStyle,
-        fontSize: '5.5em',
+        fontSize: '5em',
         textAlign: 'left',
         bottom: '4%',
         left: '16%'
