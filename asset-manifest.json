@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "/R6Suiran_Timeshock/static/css/main.f855e6bc.css",
+    "main.js": "/R6Suiran_Timeshock/static/js/main.148f7e02.js",
+    "static/js/453.10b3721c.chunk.js": "/R6Suiran_Timeshock/static/js/453.10b3721c.chunk.js",
+    "static/media/timeShockTimer.mp4": "/R6Suiran_Timeshock/static/media/timeShockTimer.5072423f53f5143e17bd.mp4",
+    "static/media/hard0.mp3": "/R6Suiran_Timeshock/static/media/hard0.1dbea6c15b923d24f83b.mp3",
+    "static/media/hard3.mp3": "/R6Suiran_Timeshock/static/media/hard3.2a055050f40ddb9ea9d3.mp3",
+    "static/media/hard1.mp3": "/R6Suiran_Timeshock/static/media/hard1.426c06ffcd1097236995.mp3",
+    "static/media/hard2.mp3": "/R6Suiran_Timeshock/static/media/hard2.28a8797f1285effdb79b.mp3",
+    "static/media/normal2.mp3": "/R6Suiran_Timeshock/static/media/normal2.f225f66f6351da48297f.mp3",
+    "static/media/easy3.mp3": "/R6Suiran_Timeshock/static/media/easy3.59cce4148591033ba742.mp3",
+    "static/media/normal0.mp3": "/R6Suiran_Timeshock/static/media/normal0.1666208f546f0deefc73.mp3",
+    "static/media/easy2.mp3": "/R6Suiran_Timeshock/static/media/easy2.8abd3a4d25248ca419f7.mp3",
+    "static/media/normal3.mp3": "/R6Suiran_Timeshock/static/media/normal3.724b3a1250c30e903e4b.mp3",
+    "static/media/easy0.mp3": "/R6Suiran_Timeshock/static/media/easy0.0c5d708f4b5354507597.mp3",
+    "static/media/normal1.mp3": "/R6Suiran_Timeshock/static/media/normal1.51bd84513207b1fc9189.mp3",
+    "static/media/easy1.mp3": "/R6Suiran_Timeshock/static/media/easy1.883b823406712ede31fd.mp3",
+    "static/media/timeShockText.png": "/R6Suiran_Timeshock/static/media/timeShockText.75369a425ebcb8055ad9.png",
+    "index.html": "/R6Suiran_Timeshock/index.html",
+    "main.f855e6bc.css.map": "/R6Suiran_Timeshock/static/css/main.f855e6bc.css.map",
+    "main.148f7e02.js.map": "/R6Suiran_Timeshock/static/js/main.148f7e02.js.map",
+    "453.10b3721c.chunk.js.map": "/R6Suiran_Timeshock/static/js/453.10b3721c.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f855e6bc.css",
+    "static/js/main.148f7e02.js"
+  ]
+}
