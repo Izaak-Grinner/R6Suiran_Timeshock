@@ -144,10 +144,10 @@ const Setting = ({ onStart }) => {
                 </div>
             </div>
             <button onClick={handleStart} style={buttonStyle}>挑む</button>
-            <p>
-                クレジット　VOICEVOX:聖騎士紅桜<p></p>Youtube:大我の動画保管室,タイムショックタイマー 完全版
+            <div>
+                クレジット <p></p>VOICEVOX:聖騎士紅桜 <p></p>Youtube:大我の動画保管室,タイムショックタイマー 完全版
 
-            </p>
+            </div>
         </div>
     );
 };

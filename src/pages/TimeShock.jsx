@@ -134,17 +134,16 @@ const Timeshock = ({ settings }) => {
                 setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
                 questionCount++;
                 //setIsAnswerVisible(false);
-                setShowText(false);
+                //setShowText(false);
 
                 setTimeout(() => {
                     setShowText(true);
                     setShowAudio(true);
 
-                    setTimeout(() => {
-                        // setIsAnswerVisible(true);
-                        setTimeout(loadNextQuestion, 250);
-                    }, 4500);
-                }, 250);
+                    setTimeout(loadNextQuestion
+                        // setIsAnswerVisible(true);loadNextQuestion, 250);
+                        , 4950);
+                }, 50);
             } else {
                 setIsQuizOver(true);
                 console.log("Quiz Over");
@@ -158,7 +157,7 @@ const Timeshock = ({ settings }) => {
         const videoElement = videoRef.current;
         if (videoElement && isDataLoaded) {
             const handlePlay = () => {
-                setTimeout(startQuestionCycle, 3020);
+                setTimeout(startQuestionCycle, 5600);
                 videoElement.removeEventListener('play', handlePlay);
             };
             videoElement.addEventListener('play', handlePlay);
@@ -228,16 +227,16 @@ const Timeshock = ({ settings }) => {
 
     const webcamContainer = {
         position: 'absolute',
-        top: '42.5%',
+        top: '41%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        width: '58%',
-        height: '54%',
+        width: '59%',
+        height: '55%',
         overflow: 'hidden',
-        borderRadius: '40%',
+        borderRadius: '42%',
         zIndex: 2,
     };
 
@@ -255,10 +254,10 @@ const Timeshock = ({ settings }) => {
 
     const styleQuiz = {
         ...textStyle,
-        fontSize: '4.5em',
+        fontSize: '3em',
         textAlign: 'left',
-        bottom: '4%',
-        left: '14%'
+        bottom: '6%',
+        left: '13%'
     };
 
     /*const styleScore = {
@@ -285,8 +284,8 @@ const Timeshock = ({ settings }) => {
     const styleUser = {
         ...textStyle,
         fontSize: '4em',
-        bottom: '32%',
-        right: '43%',
+        bottom: '33%',
+        left: '43%',
         textAlign: 'left'
     };
 
