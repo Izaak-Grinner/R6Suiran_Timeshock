@@ -2,7 +2,10 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Webcam from 'react-webcam';
 import timeShockText from "../images/timeShockText.png";
 import timeShockTimer from "../videos/timeShockTimer.mp4";
-import { quizData } from '../db';
+import { Client, Storage } from "appwrite";
+import Papa from 'papaparse';
+import { dbID } from '../appwrite';
+import { useKey } from 'react-use';
 
 const Timeshock = ({ settings }) => {
     const [questions, setQuestions] = useState([]);
@@ -12,14 +15,85 @@ const Timeshock = ({ settings }) => {
     const [showText, setShowText] = useState(false);
     const [isAnswerVisible, setIsAnswerVisible] = useState(false);
     const [username, setUsername] = useState('');
+    const [files, setFiles] = useState([]);
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
     const videoRef = useRef(null);
 
+    const decrement = () => {
+        setScore((prevIndex) => prevIndex - 1);
+    };
+
+    const increment = () => {
+        setScore((prevIndex) => prevIndex + 1);
+    };
+
+    useKey('ArrowDown', decrement);
+    useKey('ArrowUp', increment);
+
     useEffect(() => {
-        const filteredQuestions = quizData.filter(
-            (q) => q.category === settings.category && q.level === settings.level
-        );
-        setQuestions(filteredQuestions);
-    }, [settings]);
+        const fetchFiles = async () => {
+            const client = new Client()
+                .setEndpoint(dbID.endpoint)
+                .setProject(dbID.project);
+
+            const storage = new Storage(client);
+
+            try {
+                const result = await storage.listFiles(dbID.bucket);
+                setFiles(result.files);
+            } catch (error) {
+                console.error("Error fetching files:", error);
+            }
+        };
+
+        fetchFiles();
+    }, []);
+
+    useEffect(() => {
+        const fetchLatestCSVData = async () => {
+            if (files.length > 0) {
+                const latestFile = files.reduce((latest, file) => {
+                    return new Date(file.$createdAt) > new Date(latest.$createdAt) ? file : latest;
+                });
+
+                try {
+                    const client = new Client()
+                        .setEndpoint(dbID.endpoint)
+                        .setProject(dbID.project);
+
+                    const storage = new Storage(client);
+                    const fileURL = storage.getFileView(dbID.bucket, latestFile.$id).href;
+
+                    const response = await fetch(fileURL);
+                    const blob = await response.blob();
+
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const csvText = reader.result;
+                        Papa.parse(csvText, {
+                            header: false,
+                            complete: (results) => {
+                                const csvQuestions = results.data;
+                                console.log("Parsed CSV Questions:", csvQuestions);
+                                const filteredQuestions = csvQuestions.filter(
+                                    (q) => q[0] === settings.type.toString() && q[1] === settings.level.toString()
+                                );
+                                setQuestions(filteredQuestions);
+                                setIsDataLoaded(true);
+                                videoRef.current.play();
+                            }
+                        });
+                    };
+                    reader.readAsText(blob);
+
+                } catch (error) {
+                    console.error("Error fetching or parsing CSV file:", error);
+                }
+            }
+        };
+
+        fetchLatestCSVData();
+    }, [files, settings]);
 
     useEffect(() => {
         setUsername(settings.username);
@@ -29,9 +103,10 @@ const Timeshock = ({ settings }) => {
         let questionCount = 0;
 
         const loadNextQuestion = () => {
-            if (questionCount < 12) {
-                questionCount++;
+            if (questionCount < 13 && questionCount < questions.length) {
+
                 setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+                questionCount++;
                 setIsAnswerVisible(false);
                 setShowText(false);
 
@@ -44,24 +119,27 @@ const Timeshock = ({ settings }) => {
                 }, 250);
             } else {
                 setIsQuizOver(true);
+                console.log("Quiz Over");
             }
         };
 
         loadNextQuestion();
-    }, []);
+    }, [questions]);
 
     useEffect(() => {
         const videoElement = videoRef.current;
-        if (videoElement) {
+        if (videoElement && isDataLoaded) {
             const handlePlay = () => {
                 setTimeout(startQuestionCycle, 3020);
                 videoElement.removeEventListener('play', handlePlay);
             };
             videoElement.addEventListener('play', handlePlay);
         }
-    }, [startQuestionCycle]);
+    }, [startQuestionCycle, isDataLoaded]);
 
     const currentQuestion = questions[currentQuestionIndex];
+    console.log("Current Question Index:", currentQuestionIndex);
+    console.log("Current Question:", currentQuestion);
 
     const styleShow = {
         position: 'relative',
@@ -78,16 +156,16 @@ const Timeshock = ({ settings }) => {
 
     const webcamContainer = {
         position: 'absolute',
-        top: '40%',
+        top: '42.5%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        width: '59%',
+        width: '58%',
         height: '54%',
         overflow: 'hidden',
-        borderRadius: '42%',
+        borderRadius: '40%',
         zIndex: 2,
     };
 
@@ -105,9 +183,10 @@ const Timeshock = ({ settings }) => {
 
     const styleQuiz = {
         ...textStyle,
-        fontSize: '7em',
-        bottom: '8%',
-        right: '35%'
+        fontSize: '5em',
+        textAlign: 'left',
+        bottom: '4%',
+        right: '28%'
     };
 
     const styleScore = {
@@ -117,11 +196,15 @@ const Timeshock = ({ settings }) => {
         right: '26%'
     };
 
+    const styleLastScore = {
+        zIndex: 5
+    };
+
     const styleAnswer = {
         ...textStyle,
         fontSize: '4em',
-        top: '25%',
-        right: '22.5%',
+        top: '26%',
+        right: '22%',
         width: '15%',
         overflowWrap: 'break-word',
         lineHeight: '1.2em'
@@ -129,15 +212,16 @@ const Timeshock = ({ settings }) => {
 
     const styleUser = {
         ...textStyle,
-        fontSize: '7em',
-        bottom: '35%',
-        right: '45%',
+        fontSize: '4em',
+        bottom: '32%',
+        right: '43%',
+        textAlign: 'left'
     };
 
     return (
         <div className="showQuiz" style={styleShow}>
-            <video autoPlay style={{ ...stylePosition, zIndex: 1 }} ref={videoRef}>
-                <source src={timeShockTimer} type='video/mp4' />
+            <video style={{ ...stylePosition, zIndex: 1 }} ref={videoRef}>
+                <source src={timeShockTimer} type='video/mp4' id="video" />
                 Your browser does not support the video tag.
             </video>
 
@@ -149,8 +233,8 @@ const Timeshock = ({ settings }) => {
 
             {isQuizOver ? (
                 <div>
-                    <h2>Quiz Over!</h2>
-                    <p>Your final score is: {score}</p>
+                    <h2>Your final score is: {score}</h2>
+                    <p style={styleLastScore}>Your final score is: {score}</p>
                 </div>
             ) : (
                 <>
@@ -160,19 +244,28 @@ const Timeshock = ({ settings }) => {
                         <>
                             {showText && (
                                 <>
-                                    <div style={styleQuiz}>{currentQuestion.question}</div>
-                                    <div style={styleScore}>{score}</div>
+                                    <div style={styleQuiz}>{currentQuestion[2]}</div>
+                                    <div id="score" style={styleScore}>{score}</div>
                                     <div style={styleUser}>{username}</div>
                                 </>
                             )}
 
                             {isAnswerVisible && (
-                                <div style={styleAnswer}>{currentQuestion.answer}</div>
+                                <div style={styleAnswer}>{currentQuestion[3]}</div>
                             )}
                         </>
                     )}
                 </>
             )}
+
+            {/*<div>
+                <h3>Fetched Files:</h3>
+                <ul>
+                    {files.map(file => (
+                        <li key={file.$id}>{file.name}</li>
+                    ))}
+                </ul>
+                </div>*/}
         </div>
     );
 };
