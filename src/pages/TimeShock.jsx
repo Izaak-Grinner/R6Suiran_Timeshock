@@ -46,7 +46,7 @@ const Timeshock = ({ settings }) => {
             }
         };
 
-        fetchFiles();//u
+        fetchFiles();
     }, []);
 
     useEffect(() => {
@@ -183,10 +183,10 @@ const Timeshock = ({ settings }) => {
 
     const styleQuiz = {
         ...textStyle,
-        fontSize: '5em',
+        fontSize: '5.5em',
         textAlign: 'left',
         bottom: '4%',
-        right: '28%'
+        left: '16%'
     };
 
     const styleScore = {
