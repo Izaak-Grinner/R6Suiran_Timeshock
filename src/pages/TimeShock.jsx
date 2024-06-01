@@ -149,6 +149,7 @@ const Timeshock = ({ settings }) => {
         position: 'relative',
         width: '100%',
         height: '100vh',
+        aspectRatio: 16 / 9
     };
 
     const stylePosition = {
